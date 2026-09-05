@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlock File</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #0f172a;
+      color: #ffffff;
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .card {
+      background: #1e293b;
+      padding: 32px 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid #334155;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 0 0 24px;
+      line-height: 1.5;
+    }
+    button {
+      background: #22c55e;
+      color: #ffffff;
+      border: none;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+    button:active {
+      transform: scale(0.98);
+      background: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔒 File Locked</h2>
+    <p>Watch a short video ad to unlock and download your file.</p>
+    <button onclick="showAd()">🎬 Watch Ad to Unlock</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    const AdController = window.Adsgram.init({ blockId: "46253" });
+
+    function showAd() {
+      AdController.show().then((result) => {
+        // Sends verification signal back to the bot
+        tg.sendData("ad_completed");
+      }).catch((result) => {
+        alert("Please complete the ad to unlock your file.");
+      });
+    }
+  </script>
+</body>
+</html>
