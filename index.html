@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>17F Shorter | NextGen Link Unlocker</title>
+    
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Adsgram SDK -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <!-- Monetag SDK -->
+    <script src="//libtl.com/sdk.js" data-zone="11733593" data-sdk="show_11733593"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #030712;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.45;
+        }
+        body::before {
+            background: #4f46e5;
+            top: -60px;
+            left: -60px;
+        }
+        body::after {
+            background: #059669;
+            bottom: -60px;
+            right: -60px;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 36px 24px 28px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 410px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 24px;
+            transition: opacity 0.2s;
+        }
+        .brand-title:active { opacity: 0.7; }
+
+        .field-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+        .field-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: #64748b;
+            font-size: 15px;
+            pointer-events: none;
+        }
+        .input-box {
+            width: 100%;
+            padding: 14px 14px 14px 42px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: #38bdf8;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-box:focus {
+            border-color: #6366f1;
+            background: rgba(15, 23, 42, 0.85);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+        }
+        .input-box::placeholder { color: #475569; }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-unlock {
+            padding: 16px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 24px -6px var(--emerald-glow);
+            margin-top: 6px;
+        }
+        .btn-unlock:hover { box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.5); }
+        .btn-unlock:active { transform: scale(0.98); }
+        .btn-unlock:disabled {
+            background: #1e293b;
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0 18px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .divider span { padding: 0 12px; }
+
+        .btn-bonus {
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+        }
+        .btn-bonus:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .btn-bonus:active { transform: scale(0.98); }
+        .btn-bonus:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .status-badge {
+            margin-top: 18px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .status-err { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.25); }
+        .status-ok { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.25); }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+        .modal-box {
+            background: #0b1329;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 32px 24px;
+            border-radius: 26px;
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
+        }
+        .close-btn {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            color: #64748b;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .close-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+
+        .btn-modal {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn-modal:hover { background: var(--primary-hover); }
+
+        .copy-group { display: flex; gap: 8px; margin-top: 10px; }
+        .copy-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: #030712;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            color: #38bdf8;
+            font-size: 12px;
+            outline: none;
+        }
+        .copy-group button {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-group button:hover { background: rgba(255, 255, 255, 0.15); }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="badge-pill">⚡ Fast & Direct</div>
+        <h1 class="brand-title" id="secretTitle" onclick="handleSecretTitleClick()">17F Shorter</h1>
+
+        <div class="field-group">
+            <div class="field-label">
+                <span>Direct Access Link</span>
+                <span style="color: #6366f1; font-size: 11px;">Protected</span>
+            </div>
+            <div class="input-wrapper">
+                <span class="input-icon">🔗</span>
+                <input type="text" id="userLinkInput" class="input-box" placeholder="https://t.me/Filesizes_bot/unlock?startapp=...">
+            </div>
+        </div>
+
+        <button id="getRewardBtn" class="btn btn-unlock" onclick="handleMainUnlockFlow()">
+            <span>🎁</span> Get Reward (Unlock Link)
+        </button>
+
+        <div class="divider"><span>EXTRA SUPPORT</span></div>
+
+        <button id="bonusWatchBtn" class="btn btn-bonus" onclick="handleBonusFourAds()">
+            <span>🎬</span> Watch Video to Unlock (4 Ads)
+        </button>
+
+        <div id="statusBadge" class="status-badge"></div>
+    </div>
+
+    <!-- Secret Admin Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3 style="margin-bottom: 20px; text-align: left; font-size: 18px; font-weight: 700;">🔐 Secret Admin Login</h3>
+            <div class="field-group">
+                <div class="field-label">Username</div>
+                <input type="text" id="adminUser" class="input-box" style="padding-left: 14px;" placeholder="Enter username" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <div class="field-label">Password</div>
+                <input type="password" id="adminPass" class="input-box" style="padding-left: 14px;" placeholder="Enter password">
+            </div>
+            <button class="btn-modal" onclick="verifyAdminLogin()">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Admin Link Creator Panel -->
+    <div id="adminPanel" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('adminPanel', false)">✕</button>
+            <h3 style="margin-bottom: 20px; text-align: left; font-size: 18px; font-weight: 700;">⚡ Direct Bot Link Generator</h3>
+            <div class="field-group">
+                <div class="field-label">Target Destination URL (અસલ લિંક)</div>
+                <input type="url" id="mainTargetUrl" class="input-box" style="padding-left: 14px;" placeholder="https://youtu.be/... or file URL">
+            </div>
+            <button class="btn-modal" onclick="generateShortLink()">Generate Protected Link</button>
+
+            <div id="resultBox" style="display: none; margin-top: 20px;">
+                <div class="field-label">Bot Link (Auto-Copied)</div>
+                <div class="copy-group">
+                    <input type="text" id="shortOut" readonly>
+                    <button onclick="copyGeneratedLink()">Copy</button>
+                </div>
+                <p id="copyMsg" style="color: #34d399; font-size: 12px; margin-top: 8px; text-align: left; display: none;">✓ Copied to clipboard!</p>
+            </div>
+        </div>
+                  </div>
+                      <script>
+        const ADSGRAM_VIDEO_ID = "46253";
+        const ADSGRAM_TASK_ID = "46323"; // અહી નંબર સુધારેલો છે
+        const BOT_USERNAME = "Filesizes_bot";
+        const BOT_APP_NAME = "unlock";
+
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        let secretMainUrl = "";
+
+        const tgStartParam = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.start_param) 
+                             || params.get("tgWebAppStartParam") 
+                             || params.get("startapp") 
+                             || params.get("url");
+
+        if (tgStartParam) {
+            try {
+                secretMainUrl = atob(decodeURIComponent(tgStartParam));
+                document.getElementById("userLinkInput").value = `https://t.me/${BOT_USERNAME}/${BOT_APP_NAME}?startapp=${encodeURIComponent(tgStartParam)}`;
+            } catch(e) {
+                secretMainUrl = "";
+            }
+        }
+
+        // Adsgram Controllers
+        let AdVideoController = null;
+        let AdTaskController = null;
+        if (window.Adsgram) {
+            AdVideoController = window.Adsgram.init({ blockId: ADSGRAM_VIDEO_ID });
+            AdTaskController = window.Adsgram.init({ blockId: ADSGRAM_TASK_ID });
+        }
+
+        function runAdsgramVideo() {
+            return new Promise((resolve, reject) => {
+                if (!AdVideoController) return resolve();
+                AdVideoController.show().then(resolve).catch(reject);
+            });
+        }
+
+        function runAdsgramTask() {
+            return new Promise((resolve, reject) => {
+                if (!AdTaskController) return resolve();
+                AdTaskController.show().then(resolve).catch(reject);
+            });
+        }
+
+        function runMonetagInterstitial() {
+            return new Promise((resolve, reject) => {
+                if (typeof show_11733593 === 'function') {
+                    show_11733593().then(resolve).catch(reject);
+                } else {
+                    resolve();
+                }
+            });
+        }
+
+        function runMonetagPopup() {
+            return new Promise((resolve, reject) => {
+                if (typeof show_11733593 === 'function') {
+                    show_11733593('pop').then(resolve).catch(reject);
+                } else {
+                    resolve();
+                }
+            });
+        }
+
+        // ૧. GET REWARD FLOW: ૪ માંથી ૩ રેન્ડમ હાઈ-સીપીએમ એડ્સ
+        async function handleMainUnlockFlow() {
+            let finalTarget = secretMainUrl;
+            const inputVal = document.getElementById("userLinkInput").value.trim();
+
+            if (!finalTarget && inputVal) {
+                try {
+                    const parsed = new URL(inputVal);
+                    const qParam = parsed.searchParams.get("startapp") || parsed.searchParams.get("tgWebAppStartParam") || parsed.searchParams.get("url");
+                    finalTarget = qParam ? atob(decodeURIComponent(qParam)) : inputVal;
+                } catch(e) {
+                    finalTarget = inputVal;
+                }
+            }
+
+            if (!finalTarget) {
+                notify("Please enter or paste a valid link!", true);
+                return;
+            }
+
+            const btn = document.getElementById("getRewardBtn");
+            btn.disabled = true;
+
+            const highTier = [
+                { name: "Task Sponsor", run: runAdsgramTask },
+                { name: "High-CPM Sponsor", run: runMonetagPopup }
+            ];
+            const regularTier = [
+                { name: "Video Sponsor", run: runAdsgramVideo },
+                { name: "Partner Sponsor", run: runMonetagInterstitial }
+            ];
+
+            const chosen = [];
+            chosen.push(highTier[Math.floor(Math.random() * highTier.length)]);
+            
+            const pool = [highTier[0], highTier[1], regularTier[0], regularTier[1]].filter(item => item !== chosen[0]);
+            pool.sort(() => 0.5 - Math.random());
+            chosen.push(pool[0], pool[1]);
+            chosen.sort(() => 0.5 - Math.random());
+
+            try {
+                for (let i = 0; i < chosen.length; i++) {
+                    btn.innerHTML = `<span>⏳</span> Ad ${i + 1}/3 (${chosen[i].name})...`;
+                    await chosen[i].run();
+                }
+
+                notify("✅ Verification Complete! Redirecting to Chrome...", false);
+
+                setTimeout(() => {
+                    autoOpenInExternalBrowser(finalTarget);
+                }, 500);
+
+            } catch (err) {
+                notify("⚠️ Please complete all 3 ads to unlock your link.", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>🎁</span> Get Reward (Unlock Link)`;
+            }
+        }
+
+        // ૨. BONUS FLOW: ચારેય ૪ એડ્સ
+        async function handleBonusFourAds() {
+            const btn = document.getElementById("bonusWatchBtn");
+            btn.disabled = true;
+
+            const allAds = [
+                { name: "Popup Offer", run: runMonetagPopup },
+                { name: "Task Sponsor", run: runAdsgramTask },
+                { name: "Reward Video", run: runAdsgramVideo },
+                { name: "Interstitial", run: runMonetagInterstitial }
+            ];
+
+            try {
+                for (let i = 0; i < allAds.length; i++) {
+                    btn.innerHTML = `<span>⏳</span> Bonus Ad ${i + 1}/4...`;
+                    await allAds[i].run();
+                }
+                notify("🎉 All 4 bonus ads completed! Thank you.", false);
+            } catch (err) {
+                notify("Bonus ad was interrupted or closed.", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>🎬</span> Watch Video to Unlock (4 Ads)`;
+            }
+        }
+
+        function autoOpenInExternalBrowser(url) {
+            let cleanUrl = url.trim();
+            if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+                cleanUrl = "https://" + cleanUrl;
+            }
+
+            if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === "function") {
+                try {
+                    window.Telegram.WebApp.openLink(cleanUrl, { try_browser: 'chrome' });
+                    return;
+                } catch(e) {}
+            }
+
+            window.location.assign(cleanUrl);
+        }
+
+        function notify(text, isErr) {
+            const b = document.getElementById("statusBadge");
+            b.innerText = text;
+            b.className = `status-badge ${isErr ? 'status-err' : 'status-ok'}`;
+            b.style.display = "block";
+        }
+
+        // Secret Admin Login
+        let clicks = 0;
+        let timer = null;
+        function handleSecretTitleClick() {
+            clicks++;
+            clearTimeout(timer);
+            timer = setTimeout(() => { clicks = 0; }, 1400);
+
+            if (clicks >= 5) {
+                clicks = 0;
+                toggleModal('loginModal', true);
+            }
+        }
+
+        function toggleModal(id, show) {
+            document.getElementById(id).style.display = show ? 'flex' : 'none';
+        }
+
+        function verifyAdminLogin() {
+            const u = document.getElementById("adminUser").value.trim();
+            const p = document.getElementById("adminPass").value.trim();
+
+            if (u === "chiku_.3919" && p === "Chintan@2009") {
+                toggleModal('loginModal', false);
+                toggleModal('adminPanel', true);
+                document.getElementById("adminUser").value = "";
+                document.getElementById("adminPass").value = "";
+            } else {
+                alert("Invalid Credentials!");
+            }
+        }
+
+        function generateShortLink() {
+            let val = document.getElementById("mainTargetUrl").value.trim();
+            if (!val) {
+                alert("Please enter target URL!");
+                return;
+            }
+
+            if (!val.startsWith("http://") && !val.startsWith("https://")) {
+                val = "https://" + val;
+            }
+
+            const encoded = encodeURIComponent(btoa(val));
+            const directBotLink = `https://t.me/${BOT_USERNAME}/${BOT_APP_NAME}?startapp=${encoded}`;
+
+            const out = document.getElementById("shortOut");
+            out.value = directBotLink;
+            document.getElementById("resultBox").style.display = "block";
+            copyGeneratedLink();
+        }
+
+        function copyGeneratedLink() {
+            const out = document.getElementById("shortOut");
+            out.select();
+            out.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(out.value);
+
+            const msg = document.getElementById("copyMsg");
+            msg.style.display = "block";
+            setTimeout(() => { msg.style.display = "none"; }, 2000);
+        }
+    </script>
+</body>
+</html>
