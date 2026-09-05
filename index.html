@@ -6,34 +6,189 @@
     <title>17F Shorter</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-dark: #090d16;
-            --card-bg: rgba(17, 24, 39, 0.8);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #090d16; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(255,255,255,0.1); padding: 32px 24px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        .title { font-size: 26px; font-weight: 800; color: #38bdf8; cursor: pointer; user-select: none; margin-bottom: 20px; }
+        .field { text-align: left; margin-bottom: 16px; }
+        .field label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
+        .input-box { width: 100%; padding: 14px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 14px; outline: none; }
+        .btn-ad { width: 100%; padding: 15px; background: #6366f1; color: #fff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .btn-ad:disabled { background: #334155; color: #64748b; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 99; }
+        .modal-box { background: #0f172a; border: 1px solid rgba(255,255,255,0.1); padding: 28px; border-radius: 20px; width: 100%; max-width: 360px; position: relative; }
+        .close-btn { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; }
+        .status { margin-top: 14px; font-size: 13px; padding: 10px; border-radius: 10px; display: none; }
+        .status-ok { background: rgba(16,185,129,0.2); color: #34d399; }
+        .status-err { background: rgba(239,68,68,0.2); color: #f87171; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1 class="title" id="secretTitle" onclick="handleTitleClick()">17F Shorter</h1>
+        
+        <div class="field">
+            <label>Send / Paste Your Link</label>
+            <input type="url" id="userLinkInput" class="input-box" placeholder="Paste link here...">
+        </div>
+
+        <button id="adBtn" class="btn-ad" onclick="startUnlockFlow()">🎬 Watch Video to Unlock</button>
+        <div id="statusBadge" class="status"></div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('loginModal', false)">✕</button>
+            <h3 style="margin-bottom: 16px; text-align: left;">🔐 Secret Admin Login</h3>
+            <div class="field">
+                <input type="text" id="adminUser" class="input-box" placeholder="Username">
+            </div>
+            <div class="field">
+                <input type="password" id="adminPass" class="input-box" placeholder="Password">
+            </div>
+            <button class="btn-ad" style="background:#10b981;" onclick="checkAdmin()">Sign In</button>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('adminPanel', false)">✕</button>
+            <h3 style="margin-bottom: 16px; text-align: left;">⚡ Generate Locked Link</h3>
+            <div class="field">
+                <label>Main Target URL:</label>
+                <input type="url" id="mainTarget" class="input-box" placeholder="https://t.me/...">
+            </div>
+            <button class="btn-ad" style="background:#10b981;" onclick="createLink()">Generate & Copy</button>
+
+            <div id="resultBox" style="display:none; margin-top:16px;">
+                <input type="text" id="shortOut" readonly class="input-box" style="color:#34d399; font-size:12px;">
+                <p style="color:#34d399; font-size:12px; margin-top:8px;">✓ Copied to clipboard!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BLOCK_ID = "46253";
+
+        // Query param extraction
+        const urlParams = new URLSearchParams(window.location.search);
+        let targetDestination = "";
+        if (urlParams.get("url")) {
+            try {
+                targetDestination = atob(decodeURIComponent(urlParams.get("url")));
+                document.getElementById("userLinkInput").value = window.location.href;
+            } catch(e) {}
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        const AdController = window.Adsgram ? window.Adsgram.init({ blockId: BLOCK_ID }) : null;
+
+        function startUnlockFlow() {
+            let finalUrl = targetDestination;
+            const inputVal = document.getElementById("userLinkInput").value.trim();
+
+            if (!finalUrl && inputVal) {
+                try {
+                    const parsed = new URL(inputVal);
+                    const qUrl = parsed.searchParams.get("url");
+                    finalUrl = qUrl ? atob(decodeURIComponent(qUrl)) : inputVal;
+                } catch(e) {
+                    finalUrl = inputVal;
+                }
+            }
+
+            const btn = document.getElementById("adBtn");
+
+            if (!AdController) {
+                showMsg("Ad unavailable. Redirecting...", true);
+                setTimeout(() => { doRedirect(finalUrl || "https://telegram.org"); }, 1000);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Loading Ad...";
+
+            AdController.show().then(() => {
+                showMsg("Ad Completed! Unlocking file...", false);
+                setTimeout(() => {
+                    if (finalUrl) doRedirect(finalUrl);
+                    else {
+                        showMsg("Verified! Enter link above.", false);
+                        btn.disabled = false;
+                        btn.innerText = "🎬 Watch Video to Unlock";
+                    }
+                }, 800);
+            }).catch(() => {
+                showMsg("Ad failed or closed. Try again.", true);
+                btn.disabled = false;
+                btn.innerText = "🎬 Watch Video to Unlock";
+            });
         }
 
-        body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.12) 0px, transparent 50%);
-            color: var(--text-main);
+        function doRedirect(target) {
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                window.Telegram.WebApp.openLink(target);
+            } else {
+                window.location.href = target;
+            }
+        }
+
+        function showMsg(msg, isErr) {
+            const b = document.getElementById("statusBadge");
+            b.innerText = msg;
+            b.className = `status ${isErr ? 'status-err' : 'status-ok'}`;
+            b.style.display = "block";
+        }
+
+        // 5-click Secret Admin trigger
+        let clicks = 0;
+        let timer = null;
+        function handleTitleClick() {
+            clicks++;
+            clearTimeout(timer);
+            timer = setTimeout(() => { clicks = 0; }, 1500);
+            if (clicks >= 5) {
+                clicks = 0;
+                toggleModal('loginModal', true);
+            }
+        }
+
+        function toggleModal(id, show) {
+            document.getElementById(id).style.display = show ? 'flex' : 'none';
+        }
+
+        function checkAdmin() {
+            const u = document.getElementById("adminUser").value.trim();
+            const p = document.getElementById("adminPass").value.trim();
+            if (u === "chiku_.3919" && p === "Chintan@2009") {
+                toggleModal('loginModal', false);
+                toggleModal('adminPanel', true);
+                document.getElementById("adminUser").value = "";
+                document.getElementById("adminPass").value = "";
+            } else {
+                alert("Invalid Credentials!");
+            }
+        }
+
+        function createLink() {
+            const val = document.getElementById("mainTarget").value.trim();
+            if (!val) return alert("Enter URL!");
+
+            const encoded = encodeURIComponent(btoa(val));
+            const generated = `${window.location.origin}${window.location.pathname}?url=${encoded}`;
+
+            const out = document.getElementById("shortOut");
+            out.value = generated;
+            document.getElementById("resultBox").style.display = "block";
+
+            out.select();
+            navigator.clipboard.writeText(generated);
+        }
+    </script>
+</body>
+</html>
             min-height: 100vh;
             display: flex;
             align-items: center;
