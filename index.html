@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#060913" />
+  <title>CyberGate · Unlock & Earn</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Monetag SDK -->
+  <script src="//liberationunlawful.com/b/X.V/sWdrGqlO0AYNWfc/de/ueQm/9tuPZCUjlHk/P/TYUB3/MsTbgC4/MmTYQ/t/NTjocytmNZD/QzwBNGj-cq4gN_Qj"></script>
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #060913;
+      --card-bg: rgba(13, 19, 36, 0.78);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.45);
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6, 182, 212, 0.45);
+      --gold: #f59e0b;
+      --gold-glow: rgba(245, 158, 11, 0.5);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      overflow-x: hidden;
+    }
+
+    .aurora {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 90% 15%, rgba(6, 182, 212, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(245, 158, 11, 0.14) 0%, transparent 50%);
+      filter: blur(40px);
+      animation: auroraMove 10s ease-in-out infinite alternate;
+    }
+    @keyframes auroraMove {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08) translate(-10px, 10px); }
+    }
+
+    .container {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 440px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 26px;
+      padding: 28px 22px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+
+    .header-tab {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      background: rgba(4, 7, 15, 0.75);
+      padding: 5px;
+      border-radius: 18px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 6px;
+    }
+    .tab-btn {
+      position: relative;
+      padding: 12px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border-radius: 14px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(6, 182, 212, 0.15));
+      color: #fff;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-hot {
+      position: absolute;
+      top: -6px; right: 2px;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 99px;
+      letter-spacing: 0.03em;
+      box-shadow: 0 0 12px var(--gold-glow);
+      animation: pulseBadge 1.5s infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px var(--gold)); }
+      50% { transform: scale(1.1); filter: drop-shadow(0 0 10px #ef4444); }
+    }
+
+    .box { text-align: center; }
+    h2.gradient-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    p.sub { font-size: 0.83rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+
+    .stats-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 14px 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-pill::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12), transparent 70%);
+    }
+    .stat-pill b {
+      position: relative;
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(180deg, #fef08a, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-pill small {
+      position: relative;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    .btn {
+      position: relative;
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      border: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none !important; }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: -50%; left: -60%;
+      width: 40%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: rotate(25deg);
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% { left: -60%; }
+      30%, 100% { left: 130%; }
+    }
+
+    .btn-earn {
+      background: linear-gradient(135deg, #f59e0b, #d97706 60%, #b45309);
+      color: #1a0d00;
+      box-shadow: 0 10px 30px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .btn-unlock {
+      background: linear-gradient(135deg, #34d399, #10b981 60%, #059669);
+      color: #021a10;
+      box-shadow: 0 10px 30px var(--emerald-glow), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .btn-upi {
+      background: linear-gradient(135deg, #22d3ee, #06b6d4 60%, #0891b2);
+      color: #011e26;
+      box-shadow: 0 10px 30px var(--cyan-glow), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    .timer-card {
+      margin-top: 14px;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px dashed rgba(245, 158, 11, 0.35);
+      color: #fde68a;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .input-wrap { margin-top: 18px; text-align: left; }
+    .input-wrap label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .input-box {
+      width: 100%;
+      height: 48px;
+      background: rgba(5, 8, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 0 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s;
+    }
+    .input-box:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+    }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: #090e1c;
+      color: #a7f3d0;
+      border: 1px solid var(--emerald);
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.8);
+      opacity: 0; pointer-events: none; transition: 0.3s; z-index: 50;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+
+  <div class="container">
+    <div class="header-tab">
+      <button class="tab-btn active" id="tab-unlock" onclick="switchTab('unlock')">
+        <span>🔗 Unlock Link</span>
+      </button>
+      <button class="tab-btn" id="tab-earn" onclick="switchTab('earn')">
+        <span class="badge-hot">₹ UPI</span>
+        <span>💰 Earn Money</span>
+      </button>
+    </div>
+
+    <!-- VIEW 1: UNLOCKER -->
+    <div id="view-unlock" class="box">
+      <h2 class="gradient-title">Secure Unlock Gate</h2>
+      <p class="sub">Complete the quick verification below to access your destination material.</p>
+      
+      <button class="btn btn-unlock" id="btn-unlock-start">
+        <span>⚡ Watch Ads & Unlock Link</span>
+      </button>
+
+      <div id="unlock-done" class="hidden" style="margin-top: 18px;">
+        <a class="btn btn-upi" id="btn-destination" target="_blank" href="#" style="text-decoration:none;">
+          <span>🎉 Open Unlocked Link ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIEW 2: EARN MONEY -->
+    <div id="view-earn" class="box hidden">
+      <h2 class="gradient-title" style="background: linear-gradient(135deg, #fff 40%, #fde68a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Watch & Earn UPI</h2>
+      <p class="sub">Watch sponsored ads, collect coins, and withdraw directly via UPI.</p>
+
+      <div class="stats-board">
+        <div class="stat-pill">
+          <b id="coin-balance">0</b>
+          <small>🪙 Your Coins</small>
+        </div>
+        <div class="stat-pill">
+          <b id="daily-left">25/25</b>
+          <small>🎯 Daily Tasks</small>
+        </div>
+      </div>
+
+      <button class="btn btn-earn" id="btn-watch-ad">
+        <span>🔥 Watch Ads & Earn 10 Coins</span>
+      </button>
+
+      <div id="timer-status" class="timer-card hidden">
+        <span>⏳ Ad Loading... Please wait (6s)</span>
+      </div>
+
+      <div class="input-wrap">
+        <label for="upi-id">Instant Payout (500 Coins = ₹5.00)</label>
+        <input type="text" class="input-box" id="upi-id" placeholder="Enter UPI ID (e.g. username@upi)" />
+      </div>
+
+      <button class="btn btn-upi" id="btn-withdraw" style="margin-top: 12px;">
+        <span>💸 Withdraw ₹5.00</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+    <script>
+    const BOT_TOKEN = "8861476101:AAHBeX5H5UchF_9-exmWWm6xPA3wstrZ_Ec";[span_1](start_span)[span_1](end_span)
+    const ADMIN_CHAT_ID = "5714243957";[span_2](start_span)[span_2](end_span)
+    const ADSGRAM_BLOCK_ID = "38848";
+
+    let AdController;
+    try {
+      if (window.Adsgram) {
+        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      }
+    } catch (e) {
+      console.warn("Adsgram Init Error:", e);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2600);
+    }
+
+    function switchTab(tab) {
+      const viewUnlock = document.getElementById("view-unlock");
+      const viewEarn = document.getElementById("view-earn");
+      const tabUnlock = document.getElementById("tab-unlock");
+      const tabEarn = document.getElementById("tab-earn");
+
+      if (tab === 'unlock') {
+        viewUnlock.classList.remove("hidden");
+        viewEarn.classList.add("hidden");
+        tabUnlock.classList.add("active");
+        tabEarn.classList.remove("active");
+      } else {
+        viewUnlock.classList.add("hidden");
+        viewEarn.classList.remove("hidden");
+        tabUnlock.classList.remove("active");
+        tabEarn.classList.add("active");
+        loadUserData();
+      }
+    }
+
+    // --- SMART AD SET ENGINE ---
+    async function triggerAdSet(onSuccess) {
+      showToast("⚡ Loading Video Ad...");
+
+      // 1. Adsgram Video
+      try {
+        if (AdController) {
+          await AdController.show();
+        }
+      } catch (err) {
+        console.log("Adsgram Skipped/Error:", err);
+      }
+
+      // 2. Monetag Interstitial
+      try {
+        if (typeof show_8980838 === 'function') {
+          await show_8980838();
+        }
+      } catch (err) {
+        console.log("Monetag Skipped:", err);
+      }
+
+      onSuccess();
+    }
+
+    // --- EARN MONEY TRACKING ---
+    const TODAY_KEY = "daily_tasks_" + new Date().toISOString().slice(0, 10);
+
+    function loadUserData() {
+      const coins = parseInt(localStorage.getItem("user_coins") || "0");
+      const doneToday = parseInt(localStorage.getItem(TODAY_KEY) || "0");
+      const left = Math.max(0, 25 - doneToday);
+
+      document.getElementById("coin-balance").textContent = coins;
+      document.getElementById("daily-left").textContent = `${left}/25`;
+
+      const btn = document.getElementById("btn-watch-ad");
+      if (left === 0) {
+        btn.disabled = true;
+        btn.innerHTML = "<span>🚫 Daily Limit Reached (25/25)</span>";
+      }
+    }
+
+    document.getElementById("btn-watch-ad").addEventListener("click", () => {
+      const doneToday = parseInt(localStorage.getItem(TODAY_KEY) || "0");
+      if (doneToday >= 25) {
+        showToast("Daily limit of 25 ads reached! Come back tomorrow.");
+        return;
+      }
+
+      const btn = document.getElementById("btn-watch-ad");
+      btn.disabled = true;
+
+      triggerAdSet(() => {
+        let coins = parseInt(localStorage.getItem("user_coins") || "0") + 10;
+        localStorage.setItem("user_coins", coins);
+        localStorage.setItem(TODAY_KEY, doneToday + 1);
+        loadUserData();
+
+        showToast("🎉 +10 Coins Added to Your Wallet!");
+
+        // Random Cooldown Interval: 5s, 6s, 7s, or 8s
+        const randomWait = Math.floor(Math.random() * (8 - 5 + 1)) + 5;
+        startCountdown(randomWait);
+      });
+    });
+
+    function startCountdown(seconds) {
+      const btn = document.getElementById("btn-watch-ad");
+      const status = document.getElementById("timer-status");
+      status.classList.remove("hidden");
+
+      let current = seconds;
+      const interval = setInterval(() => {
+        status.innerHTML = `<span>⏳ Ad Loading... Please wait (<strong>${current}s</strong>)</span>`;
+        current--;
+
+        if (current < 0) {
+          clearInterval(interval);
+          status.classList.add("hidden");
+          const doneToday = parseInt(localStorage.getItem(TODAY_KEY) || "0");
+          if (doneToday < 25) {
+            btn.disabled = false;
+            btn.innerHTML = "<span>🔥 Watch Ads & Earn 10 Coins</span>";
+          }
+        }
+      }, 1000);
+    }
+
+    // --- INSTANT TELEGRAM BOT DISPATCH ---
+    document.getElementById("btn-withdraw").addEventListener("click", () => {
+      const coins = parseInt(localStorage.getItem("user_coins") || "0");
+      const upi = document.getElementById("upi-id").value.trim();
+
+      if (coins < 500) {
+        showToast(`Minimum 500 coins required (You currently have ${coins})!`);
+        return;
+      }
+
+      if (!upi || !upi.includes("@")) {
+        showToast("Please enter a valid UPI address!");
+        return;
+      }
+
+      const btn = document.getElementById("btn-withdraw");
+      btn.disabled = true;
+      btn.innerHTML = "<span>⏳ Processing...</span>";
+
+      const text =
+        "<b>💸 New UPI Withdrawal Request!</b>\n" +
+        "━━━━━━━━━━━━━━━━━━━━\n" +
+        `<b>Coins Redeemed:</b> 500 (₹5.00 INR)\n` +
+        `<b>UPI ID:</b> <code>${upi}</code>\n` +
+        `<b>Time:</b> ${new Date().toLocaleString('en-IN')}`;
+
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(ADMIN_CHAT_ID)}&text=${encodeURIComponent(text)}&parse_mode=HTML`;[span_3](start_span)[span_3](end_span)
+
+      fetch(url, { method: "GET", mode: "no-cors" })
+        .then(() => {
+          localStorage.setItem("user_coins", coins - 500);
+          loadUserData();
+          document.getElementById("upi-id").value = "";
+          showToast("✅ Request sent! Payout will be processed within 24 hours.");
+          btn.disabled = false;
+          btn.innerHTML = "<span>💸 Withdraw ₹5.00</span>";
+        })
+        .catch(() => {
+          showToast("Failed to transmit request. Please retry.");
+          btn.disabled = false;
+          btn.innerHTML = "<span>💸 Withdraw ₹5.00</span>";
+        });
+    });
+
+    // --- UNLOCKER CONTROLLER ---
+    document.getElementById("btn-unlock-start").addEventListener("click", () => {
+      const btn = document.getElementById("btn-unlock-start");
+      btn.disabled = true;
+      triggerAdSet(() => {
+        btn.classList.add("hidden");
+        document.getElementById("unlock-done").classList.remove("hidden");
+        const params = new URLSearchParams(window.location.search);
+        const dest = params.get("dest") || "#";
+        document.getElementById("btn-destination").href = dest;
+        showToast("🔓 Link Unlocked Successfully!");
+      });
+    });
+
+    loadUserData();
+  </script>
+</body>
+</html>
